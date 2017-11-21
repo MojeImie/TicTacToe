@@ -71,29 +71,45 @@ class BoardController:
             Player_marks = Mark.all_circle
             AI_marks = Mark.all_cross
 
+        
+
         if len(AI_marks) > 1:
             for i in range(1, len(AI_marks)):
-                diff = AI_marks[i].number - AI_marks[i-1].number
-                prediction = AI_marks[i].number + diff 
                 for mark in Mark.free:
                     if mark.number == prediction and prediction not in self.ui.not_allowed():
-                        self.ui.add(prediction)
-                        return prediction
+                        diff = AI_marks[i].number - AI_marks[i-1].number
+                        prediction = AI_marks[i].number + diff 
+                        if all(number != prediction for number in [1,2,4,5]):
+                            self.ui.add(prediction)
+                            return prediction
+
+
+                        prediction = AI_marks[i-1].number - diff
+                # for mark in Mark.free:
+                    # elif mark.number == prediction and prediction not in self.ui.not_allowed():
+                        elif all(number != prediction for number in [5,6,8,9]):
+                            self.ui.add(prediction)
+                            return prediction
+                
+
+                        diff = (AI_marks[i].number - AI_marks[i-1].number)/2
+                        prediction = AI_marks[i].number - diff
+                # for mark in Mark.free:
+                    # elif mark.number == prediction and prediction not in self.ui.not_allowed():
+                        elif all(number != prediction for number in [1,3,7,9]):
+                            self.ui.add(prediction)
+                            return prediction
+                        # else:
+                            # return random.choice([mark.number for mark in Mark.free if not mark.circle and not mark.cross])
+                        
         else:
-            return 1
+            return random.choice([mark.number for mark in Mark.free if not mark.circle and not mark.cross])
+                
 
-
-
-
-        # if len(mark) >= 3:
-        #     for i in range(2, len(mark)):
-        #         if mark[i-2].number != 5 and mark[i-2].number != 6 and mark[i].number != 4 and mark[i].number != 5: 
-        #             if (mark[i].number - mark[i-1].number) - (mark[i-1].number - mark[i-2].number) == 0:
-
-        
 
 
 #########################
+
     def insert_mark(self):
         self.breakk = False
         self.start = True
