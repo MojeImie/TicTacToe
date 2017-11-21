@@ -9,7 +9,7 @@ class BoardController:
         self.ui = ui
         self.player1 = player1
         self.player2 = player2
-        board = Board()
+        self.board = Board()
         self.start_controller()
     
     def start_controller(self):
@@ -64,5 +64,6 @@ class BoardController:
     def end_(self, player):
         player.won += 1
         player.last_game = datetime.date.today()
+        Mark.delete()
         self.ui.print(self.ui.end_game(player.name))
         self.ui.pause()

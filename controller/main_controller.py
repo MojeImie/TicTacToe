@@ -26,11 +26,11 @@ class MainController:
             self.create_player()
             self.create_player('second')
             BoardController(self.board_ui, self.player1, self.player2)
-            self.dao.save_scores()   #different place
+            self.dao.save_scores()   
         elif self.user == 3:
             self.create_player()
             BoardController(self.board_ui, self.player1)
-            self.dao.save_scores()   #different place
+            self.dao.save_scores()    
         elif self.user == 4:
             sys.exit('byebye')
             
@@ -42,16 +42,20 @@ class MainController:
 
     def create_player(self, player_second=None):
         name, country = self.ui.new_player_inputs()
-        for player in Player.all_players:
-            if player.name == name and player.country == country:
-                if not player_second:
-                    self.player1 = player
-                else:
-                    self.player2 = player
+
+        if all(player.name != name for player in Player.all_players):
+            if not player_second:
+                self.player1 = Player(name, country) 
+                return self.player1
             else:
-                if not player_second:
-                    self.player1 = Player(name, country) 
-                    return self.player1
-                else:
-                    self.player2 = Player(name, country)
-                    return self.player2
+                self.player2 = Player(name, country)
+                return self.player2
+        else:
+            for player in Player.all_players:
+                if player.name == name and player.country == country:
+                    if not player_second:
+                        self.player1 = player
+                        return self.player1
+                    else:
+                        self.player2 = player
+                        return self.player2

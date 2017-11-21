@@ -8,6 +8,12 @@ class Mark:
     all_cross = []
     all_circle = []
 
+    @classmethod
+    def delete(cls):
+        cls.free = []    
+        cls.all_circle = []
+        cls.all_cross = []
+
     def __init__(self, number):
         if not isinstance(number, int):
             raise ValueError('Invalid type!')
