@@ -48,7 +48,7 @@ class BoardController:
                 return
 
             self.ui.print('Your turn {}'.format(player_active.name))
-            if player_active.name != 'Computer' and player_active.country != 'World':
+            if player_active.name != 'Computer':# and player_active.country != 'World':
                 choose = self.ui.choose_place()
             else:
                 choose = self.AI_handle(player_active.sign)
@@ -70,52 +70,102 @@ class BoardController:
         else:
             Player_marks = Mark.all_cross
             AI_marks = Mark.all_circle
-        
+  
+        if len(Player_marks) >= 2:
+            for i in range(1, len(Player_marks)):
+                lower = i-1
+                while lower >= 0:
+                    diff = Player_marks[i].number - Player_marks[lower].number
+                    prediction = Player_marks[i].number + diff 
+                    for mark in Mark.free:
+                        if mark.number == prediction and prediction not in self.ui.not_allowed():
+                            if all(number != prediction for number in [1,2,4,5]):
+                                self.ui.add(prediction)
+                                print('aa3')
+                                print(prediction)
+                                return prediction
+                    lower -= 1
 
+            for i in range(1, len(Player_marks)):
+                lower = i-1
+                while lower >= 0:
+                    diff = Player_marks[i].number - Player_marks[lower].number
+                    prediction = Player_marks[i-1].number - diff
+                    for mark in Mark.free:
+                        if mark.number == prediction and prediction not in self.ui.not_allowed():
+                            if all(number != prediction for number in [5,6,8,9]):
+                                self.ui.add(prediction)
+                                print('aa1')
+                                print(prediction)
+                                return prediction
+                    lower -= 1
+
+            for i in range(1, len(Player_marks)):
+                lower = i-1
+                while lower >= 0:
+                    diff = int((Player_marks[i].number - Player_marks[lower].number)/2)
+                    prediction = Player_marks[i].number - diff
+                    for mark in Mark.free:
+                        if mark.number == prediction and prediction not in self.ui.not_allowed():
+                            if all(number != prediction for number in [1,3,7,9]):
+                                self.ui.add(prediction)
+                                print('aa2')
+                                print(prediction)
+                                return prediction
+                    lower -= 1
+
+
+###########################
         if len(AI_marks) >= 2:
             for i in range(1, len(AI_marks)):
-                for mark in Mark.free:
-                    diff = AI_marks[i].number - AI_marks[i-1].number
-                    prediction = AI_marks[i].number + diff 
-                    if mark.number == prediction and prediction not in self.ui.not_allowed():
-                        if all(number != prediction for number in [1,2,4,5]):
-                            self.ui.add(prediction)
-                            print('3')
-                            print(prediction)
-                            return prediction
-
-
-            for i in range(1, len(AI_marks)):
-                for mark in Mark.free:
-                    diff = AI_marks[i].number - AI_marks[i-1].number
-                    prediction = AI_marks[i-1].number - diff
-                    if mark.number == prediction and prediction not in self.ui.not_allowed():
-                        if all(number != prediction for number in [5,6,8,9]):
-                            self.ui.add(prediction)
-                            print('1')
-                            print(prediction)
-                            return prediction
-            
+                lower = i-1
+                while lower >= 0:
+                    diff = AI_marks[i].number - AI_marks[lower].number
+                    for mark in Mark.free:
+                        prediction = AI_marks[i].number + diff 
+                        if mark.number == prediction and prediction not in self.ui.not_allowed():
+                            if all(number != prediction for number in [1,2,4,5]):
+                                self.ui.add(prediction)
+                                print('3')
+                                print(prediction)
+                                return prediction
+                    lower -= 1
 
             for i in range(1, len(AI_marks)):
-                for mark in Mark.free:
-                    diff = int((AI_marks[i].number - AI_marks[i-1].number)/2)
+                lower = i-1
+                while lower >= 0:
+                    diff = AI_marks[i].number - AI_marks[lower].number
+                    for mark in Mark.free:
+                        prediction = AI_marks[i-1].number - diff
+                        if mark.number == prediction and prediction not in self.ui.not_allowed():
+                            if all(number != prediction for number in [5,6,8,9]):
+                                self.ui.add(prediction)
+                                print('1')
+                                print(prediction)
+                                return prediction
+                    lower -= 1
+
+            for i in range(1, len(AI_marks)):
+                lower = i-1
+                while lower >= 0:
+                    diff = int((AI_marks[i].number - AI_marks[lower].number)/2)
                     prediction = AI_marks[i].number - diff
-                    if mark.number == prediction and prediction not in self.ui.not_allowed():
-                        if all(number != prediction for number in [1,3,7,9]):
-                            self.ui.add(prediction)
-                            print('2')
-                            print(prediction)
-                            return prediction
-            
+                    for mark in Mark.free:
+                        if mark.number == prediction and prediction not in self.ui.not_allowed():
+                            if all(number != prediction for number in [1,3,7,9]):
+                                self.ui.add(prediction)
+                                print('2')
+                                print(prediction)
+                                return prediction
+                    lower -= 1
 
-            print('1else')
-            return random.choice([mark.number for mark in Mark.free if not mark.circle and not mark.cross])
+###########################################
 
-                                    
-        else:
-            print('mainelse')
-            return random.choice([mark.number for mark in Mark.free if not mark.circle if not mark.cross])
+        print('mainelse')
+        prediction = random.choice([mark.number for mark in Mark.free if not mark.circle if not mark.cross]) 
+        self.ui.add(prediction)
+        print(prediction)
+        return prediction
                 
 #########################
 
