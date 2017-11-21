@@ -14,5 +14,5 @@ class Player:
         self.won += 1
 
     def __str__(self):
-        out = '{} {} {}'.format(self.name, self.country, self.won, self.last_game)
+        out = '{} {} {} {}'.format(self.name, self.country, self.won, self.last_game)
         return out

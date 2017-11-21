@@ -4,6 +4,19 @@ class BoardUI(MainUI):
 
     not_allowed_num = []
 
+
+    @classmethod
+    def not_allowed(cls):
+        return cls.not_allowed_num    
+
+    @classmethod
+    def add(cls, number):
+        cls.not_allowed_num.append(number)    
+
+    @classmethod
+    def delete(cls):
+        cls.not_allowed_num = []
+
     @staticmethod
     def create_board(marks):
         first_row = '╔══╦══╦══╗'              
