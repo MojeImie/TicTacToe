@@ -19,3 +19,6 @@ class Player:
 
     def asdasd(asf):
         pass
+
+    def kolejny():
+        pass
